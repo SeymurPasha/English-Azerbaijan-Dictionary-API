@@ -9,7 +9,7 @@ require('dotenv').config();
 app.use(cors());
 
 const countryRoutes = require('./api/routes/country');
-
+const userRoutes = require('./api/routes/user');
 
 const uri = process.env.uri;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology:true }
@@ -36,6 +36,7 @@ next();
 })
 
 app.use('/countries', countryRoutes);
+app.use("/user", userRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
@@ -51,4 +52,6 @@ res.json({
     }
 });
 });
+
+
 module.exports = app;
