@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const moongose = require('mongoose');
 const Country = require('../models/country');
+const apiKey = require('../apiKey');
 
-
-router.get('/', (req, res, next) => {
+router.get('/', apiKey.validateKey, (req, res, next) => {
     Country.find()
     .then(countries => res.json(countries))
     .catch(err => res.status(400).json('Error: ' + err));
+    console.log(req.query.api_key);
 });
 
 router.post('/', (req,res, next) => {

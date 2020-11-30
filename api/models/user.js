@@ -4,8 +4,8 @@ const userSchema = mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     email: {
         type:String, 
-        required:true, 
-        unique:true,  
+        required:true,
+        unique:true, 
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/},
     password: {type:String, required:true},
     apiKey : {
@@ -15,13 +15,11 @@ const userSchema = mongoose.Schema({
     },
     host: {
         type:String,
-        required:true,
-        unique:true
+        required:true
     },
     usage: {
-    type:Number,
-    required : true,
-    unique:true
+    type:Array,
+    required : true
     }
 });
 

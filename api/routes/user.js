@@ -11,7 +11,6 @@ router.get('/', (req,res,next) => {
   User.find()
   .then(users => res.json(users))
   .catch(err => res.status(400).json('Error :' + err))
-
 })
 
 router.post("/signup", (req, res, next) => {
@@ -34,7 +33,7 @@ router.post("/signup", (req, res, next) => {
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.email,
                 password: hash,
-                apiKey:apiKey,
+                apiKey:apiKey.genKey(),
                 host:req.headers.origin,
                 usage:[{date:today,count:0}]
               });
