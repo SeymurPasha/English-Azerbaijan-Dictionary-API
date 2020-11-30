@@ -36,7 +36,7 @@ next();
 })
 
 app.use('/countries', countryRoutes);
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

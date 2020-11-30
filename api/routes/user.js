@@ -6,6 +6,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 
+
+router.get('/', (req,res,next) => {
+  User.find()
+  .then(users => res.json(users))
+  .catch(err => res.status(400).json('Error :' + err))
+})
+
 router.post("/signup", (req, res, next) => {
     User.find({ email: req.body.email })
       .exec()

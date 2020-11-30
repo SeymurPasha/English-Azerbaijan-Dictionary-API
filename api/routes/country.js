@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const moongose = require('mongoose');
 const Country = require('../models/country');
-const checkAuth = require('../middleware/check-auth');
+
 
 router.get('/', (req, res, next) => {
     Country.find()
@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.post('/', checkAuth, (req,res, next) => {
+router.post('/', (req,res, next) => {
     const country = new Country({
     _id: new moongose.Types.ObjectId(),
     name:req.body.name,
