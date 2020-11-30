@@ -4,16 +4,18 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-
+const apiKey = require('../apiKey');
 
 
 router.get('/', (req,res,next) => {
   User.find()
   .then(users => res.json(users))
   .catch(err => res.status(400).json('Error :' + err))
+
 })
 
 router.post("/signup", (req, res, next) => {
+  let today = new Date().toISOString().split('T')[0];
     User.find({ email: req.body.email })
       .exec()
       .then(user => {
@@ -31,7 +33,10 @@ router.post("/signup", (req, res, next) => {
               const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.email,
-                password: hash
+                password: hash,
+                apiKey:apiKey,
+                host:req.headers.origin,
+                usage:[{date:today,count:0}]
               });
               user
                 .save()
