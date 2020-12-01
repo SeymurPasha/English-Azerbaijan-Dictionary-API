@@ -8,7 +8,6 @@ router.get('/', apiKey.validateKey, (req, res, next) => {
     Country.find()
     .then(countries => res.json(countries))
     .catch(err => res.status(400).json('Error: ' + err));
-    console.log(req.query.api_key);
 });
 
 router.post('/', (req,res, next) => {

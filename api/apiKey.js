@@ -1,5 +1,5 @@
 const Users = require('./models/user');
-const MAX = process.env.API_MAX || 25;
+const MAX = 25;
 
 
 const genKey = () => {
@@ -9,22 +9,26 @@ const genKey = () => {
 };
 
 const validateKey = (req, res, next) => {
-
-    let host = req.headers.origin;
-    let api_key = req.query.api_key;
-    let account = Users.find(
-      (user) => user.host == host && user.api_key == api_key
-    );
-    console.log(account);
-    // find() returns an object or undefined
+  //Where is the API key expected to be?
+  let host = req.headers.origin;
+  let api_key = req.query.api_key;
+  let account;
+   Users.find(
+{apiKey:api_key},
+function(err,docs) {
+  if(err) {
+    console.log(err);
+  }
+  else {
+    account = docs
     if (account) {
       //good match
       //check the usage
       let today = new Date().toISOString().split('T')[0];
-      let usageIndex = account.usage.findIndex((day) => day.date == today);
+      let usageIndex = account[0].usage.findIndex((day) => day.date == today);
       if (usageIndex >= 0) {
         //already used today
-        if (account.usage[usageIndex].count >= MAX) {
+        if (account[0].usage[usageIndex].count >= MAX) {
           //stop and respond
           res.status(429).send({
             error: {
@@ -34,13 +38,13 @@ const validateKey = (req, res, next) => {
           });
         } else {
           //have not hit todays max usage
-          account.usage[usageIndex].count++;
-          console.log('Good API call', account.usage[usageIndex]);
+          account[0].usage[usageIndex].count++;
+          console.log('Good API call', account[0].usage[usageIndex]);
           next();
         }
       } else {
         //not today yet
-        account.usage.push({ date: today, count: 1 });
+        account[0].usage.push({ date: today, count: 1 });
         //ok to use again
         next();
       }
@@ -48,7 +52,9 @@ const validateKey = (req, res, next) => {
       //stop and respond
       res.status(403).send({ error: { code: 403, message: 'You not allowed.' } });
     }
-  };
-  
+  }
+})
+ 
+};
 
 module.exports = {genKey,validateKey};
