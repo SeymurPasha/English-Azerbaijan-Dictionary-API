@@ -1,5 +1,5 @@
 const Users = require('./models/user');
-const MAX = 25;
+const MAX = 10;
 
 
 const genKey = () => {
@@ -14,7 +14,7 @@ const validateKey = (req, res, next) => {
   let api_key = req.query.api_key;
   let account;
    Users.find(
-{apiKey:api_key},
+{apiKey:api_key, host:host},
 function(err,docs) {
   if(err) {
     console.log(err);
@@ -38,13 +38,18 @@ function(err,docs) {
           });
         } else {
           //have not hit todays max usage
-          account[0].usage[usageIndex].count++;
+          let countNumber = account[0].usage[0].count
+          Users.findOneAndUpdate({apiKey:api_key}, {usage:[{date:today, count:countNumber+1}]}, {new: true}, (err, updatedDoc) => {
+            if(err) return console.log(err);
+          })
           console.log('Good API call', account[0].usage[usageIndex]);
           next();
         }
       } else {
         //not today yet
-        account[0].usage.push({ date: today, count: 1 });
+        Users.findOneAndUpdate({apiKey:api_key}, {usage:[{date:today, count:1}]}, {new: true}, (err, updatedDoc) => {
+          if(err) return console.log(err);
+        })
         //ok to use again
         next();
       }

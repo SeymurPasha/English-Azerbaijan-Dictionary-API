@@ -12,7 +12,7 @@ const countryRoutes = require('./api/routes/country');
 const userRoutes = require('./api/routes/user');
 
 const uri = process.env.uri;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology:true }
+mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology:true, useFindAndModify: false}
 );
 const connection = mongoose.connection;
 connection.once('open', () => {
