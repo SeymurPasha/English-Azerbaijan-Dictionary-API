@@ -9,21 +9,21 @@ const genKey = () => {
 };
 
 const validateKey = (req, res, next) => {
-  //Where is the API key expected to be?
   let host = req.headers.origin;
   let api_key = req.query.api_key;
-  let account;
+  let account = [];
+  
+
    Users.find(
 {apiKey:api_key, host:host},
 function(err,docs) {
   if(err) {
-    console.log(err);
+  console.log(err);
   }
   else {
     account = docs
-    if (account) {
-      //good match
-      //check the usage
+    if (account.length>0) {
+    
       let today = new Date().toISOString().split('T')[0];
       let usageIndex = account[0].usage.findIndex((day) => day.date == today);
       if (usageIndex >= 0) {
