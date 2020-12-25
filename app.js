@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const fs = require('fs');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -8,8 +9,7 @@ require('dotenv').config();
 
 app.use(cors());
 
-const countryRoutes = require('./api/routes/country');
-const userRoutes = require('./api/routes/user');
+const wordRoutes = require('./api/routes/word');
 
 const uri = process.env.uri;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology:true, useFindAndModify: false}
@@ -35,8 +35,7 @@ if (req.method === "OPTIONS") {
 next();
 })
 
-app.use('/countries', countryRoutes);
-app.use("/users", userRoutes);
+app.use('/words', wordsRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
@@ -55,3 +54,4 @@ res.json({
 
 
 module.exports = app;
+
