@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-const fs = require('fs');
+
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const data = require('./file')
 
 app.use(cors());
 
@@ -35,7 +36,7 @@ if (req.method === "OPTIONS") {
 next();
 })
 
-app.use('/words', wordsRoutes);
+app.use('/words', wordRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
@@ -52,6 +53,7 @@ res.json({
 });
 });
 
+data.data()
 
 module.exports = app;
 

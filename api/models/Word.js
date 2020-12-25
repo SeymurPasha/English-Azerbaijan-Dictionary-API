@@ -10,6 +10,9 @@ const wordSchema = mongoose.Schema({
     level: {
         type:Number,
         default:1
+    },
+    image: {
+        type: String
     }
 });
 
