@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const wordSchema = mongoose.Schema({
+const level_3Schema = mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     eng: {
         type:String
@@ -9,11 +9,11 @@ const wordSchema = mongoose.Schema({
     },
     level: {
         type:Number,
-        default:1
+        default:3
     },
     image: {
         type: String
     }
 });
 
-module.exports = mongoose.model('Word', wordSchema)
+module.exports = mongoose.model('Level_3', level_3Schema)

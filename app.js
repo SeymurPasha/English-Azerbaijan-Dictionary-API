@@ -6,7 +6,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const data = require('./file')
 
 app.use(cors());
 
@@ -52,8 +51,6 @@ res.json({
     }
 });
 });
-
-data.data()
 
 module.exports = app;
 
