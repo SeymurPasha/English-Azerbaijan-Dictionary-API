@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const fs = require('fs')
+
 const Level_1 = require('../models/Level_1');
 const Level_2 = require('../models/Level_2');
 const Level_3 = require('../models/Level_3');
+
+const beginner = []
 
 const paginate = (model) => {
   return async(req,res,next) => {
@@ -37,35 +41,37 @@ const paginate = (model) => {
   }
 }
 
-router.get('/beginner', (req,res,next) => {
+router.get('/beginner/v0', (req,res,next) => {
   Level_1.find()
-  .then(words => res.status(200).json(words))
+  .then(words => res.json(words))
   .catch(err => res.status(400).json('Error :' + err))
 })
 
-router.get('/intermediate', paginate(Level_2), (req,res,next) => {
-  res.json(res.paginatedResults)
+router.get('/intermediate/v0', (req,res,next) => {
+  Level_2.find()
+  .then(words =>  res.json(words))
+  .catch(err => res.status(400).json('Error :' + err))
 })
-router.get('/upper-intermediate', (req,res,next) => {
+router.get('/upper-intermediate/v0', (req,res,next) => {
   Level_3.find()
   .then(words => res.json(words))
   .catch(err => res.status(400).json('Error :' + err))
 })
 
-router.post('/delete', (req,res) => {
-  Level_2.deleteOne({ "eng": req.body.word}).then(function(){ 
-    console.log("Data deleted"); // Success 
+router.get('/delete', (req,res) => {
+  Level_3.deleteMany({}).then(function(){ 
+    console.log("Data deleted");
 }).catch(function(error){ 
-    console.log(error); // Failure 
+    console.log(error); 
 }); 
 })
 router.post('/update', (req,res) => {
-  Level_2.findOneAndUpdate({"eng":"zone"}, {"az":"zona"}, () => {
+  Level_2.findOneAndUpdate({}, {}, () => {
     console.log();
   });
 
 })
-router.post('/beginner/find', (req,res) => {
+router.post('/beginner/find/v0', (req,res) => {
   Level_1.findOne({eng: req.body.word }, function (err, docs) { 
     if (err){ 
         console.log(err) 
@@ -75,7 +81,7 @@ router.post('/beginner/find', (req,res) => {
     } 
 }); 
   });
-router.post('/intermediate/find', (req,res) => {
+router.post('/intermediate/find/v0', (req,res) => {
   Level_2.findOne({eng: req.body.word }, function (err, docs) { 
     if (err){ 
         console.log(err) 
@@ -86,7 +92,7 @@ router.post('/intermediate/find', (req,res) => {
 }); 
   });
 
-  router.post('/upper-intermediate/find', (req,res) => {
+  router.post('/upper-intermediate/find/v0', (req,res) => {
     Level_3.findOne({eng: req.body.word }, function (err, docs) { 
       if (err){ 
           console.log(err) 

@@ -1,4 +1,6 @@
 const express = require('express');
+const rateLimit = require("express-rate-limit");
+const slowDown = require("express-slow-down");
 const app = express();
 
 const morgan = require('morgan');
@@ -7,9 +9,26 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-app.use(cors());
+app.use(cors({origin: true}));
+
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max:1000
+});
+ 
+
+const speedLimiter = slowDown({
+  windowMs: 5 * 60 * 1000,
+  delayAfter: 1000,
+  delayMs: 1000
+});
+
+app.use(limiter);
+app.use(speedLimiter);
 
 const wordRoutes = require('./api/routes/word');
+
 
 const uri = process.env.uri;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology:true, useFindAndModify: false}
@@ -23,17 +42,17 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
+    );
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
+    next();
+    });
 
-app.use((res, req, next) => {
-res.header('Access-Control-Allow-Origin', '*');
-res.header('Access-Control-Allow-Headers', 
-'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-if (req.method === "OPTIONS") {
-    res.header('Acces-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-    return res.status(200).json({});
-}
-next();
-})
 
 app.use('/words', wordRoutes);
 
