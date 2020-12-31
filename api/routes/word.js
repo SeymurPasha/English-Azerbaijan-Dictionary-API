@@ -40,6 +40,9 @@ function paginatedResults(model) {
     }
   }
 }
+router.get('/', (req,res) => {
+  res.send('Welcome to English Azerbaijan Dictionary API')
+})
 
 router.get('/beginner/v0', paginatedResults(Level_1), (req,res,next) => {
   res.json(res.paginatedResults)

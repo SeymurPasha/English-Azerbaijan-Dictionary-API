@@ -11,7 +11,7 @@
     let main = document.querySelector('.main')
 
     async function images() {       
-    const result = await fetch('http://localhost:3000/words/upper-intermediate/v0')
+    const result = await fetch('https://engazdictionary.vercel.app/words/upper-intermediate/v0')
     words = await result.json()
     words.forEach(element => {
       const item =  `<h3>${element.eng} --- ${element.az}</h3>`
