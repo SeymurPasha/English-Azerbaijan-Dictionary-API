@@ -7,32 +7,32 @@ const Level_1 = require('../models/Level_1');
 const Level_2 = require('../models/Level_2');
 const Level_3 = require('../models/Level_3');
 
-const beginner = []
 
-const paginate = (model) => {
-  return async(req,res,next) => {
-    const page = +(req.query.page)
-    const limit = +(req.query.limit)
+function paginatedResults(model) {
+  return async (req, res, next) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
 
-    const start = (page-1) * limit
-    const end = page*limit
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
 
     const results = {}
 
-    if(end > await model.countDocuments().exec()) {
+    if (endIndex < await model.countDocuments().exec()) {
       results.next = {
-        page:page + 1,
-        limit:limit
+        page: page + 1,
+        limit: limit
       }
     }
-    if(start > 0) {
+    
+    if (startIndex > 0) {
       results.previous = {
         page: page - 1,
-        limit : limit
+        limit: limit
       }
     }
     try {
-      results.results = await model.find().limit(limit).skip(start).exec()
+      results.results = await model.find().limit(limit).skip(startIndex).exec()
       res.paginatedResults = results
       next()
     } catch (e) {
@@ -41,38 +41,42 @@ const paginate = (model) => {
   }
 }
 
-router.get('/beginner/v0', (req,res,next) => {
-  Level_1.find()
-  .then(words => res.json(words))
-  .catch(err => res.status(400).json('Error :' + err))
+router.get('/beginner/v0', paginatedResults(Level_1), (req,res,next) => {
+  res.json(res.paginatedResults)
 })
 
-router.get('/intermediate/v0', (req,res,next) => {
-  Level_2.find()
-  .then(words =>  res.json(words))
-  .catch(err => res.status(400).json('Error :' + err))
+router.get('/intermediate/v0',paginatedResults(Level_2),(req,res,next) => {
+  res.json(res.paginatedResults)
 })
-router.get('/upper-intermediate/v0', (req,res,next) => {
-  Level_3.find()
-  .then(words => res.json(words))
-  .catch(err => res.status(400).json('Error :' + err))
+router.get('/upper-intermediate/v0', paginatedResults(Level_3),(req,res,next) => {
+  res.json(res.paginatedResults)
 })
 
-router.get('/delete', (req,res) => {
-  Level_3.deleteMany({}).then(function(){ 
+
+router.get('beginner/delete', (req,res) => {
+  Level_1.deleteOne({eng:req.query.word}).then(function(){ 
     console.log("Data deleted");
 }).catch(function(error){ 
     console.log(error); 
 }); 
 })
-router.post('/update', (req,res) => {
-  Level_2.findOneAndUpdate({}, {}, () => {
-    console.log();
-  });
-
+router.get('intermediate/delete', (req,res) => {
+  Level_2.deleteOne({eng:req.query.word}).then(function(){ 
+    console.log("Data deleted");
+}).catch(function(error){ 
+    console.log(error); 
+}); 
 })
-router.post('/beginner/find/v0', (req,res) => {
-  Level_1.findOne({eng: req.body.word }, function (err, docs) { 
+router.get('upper-intermediate/delete', (req,res) => {
+  Level_3.deleteOne({eng:req.body.word}).then(function(){ 
+    console.log("Data deleted");
+}).catch(function(error){ 
+    console.log(error); 
+}); 
+})
+
+router.get('/beginner/find/v0', (req,res) => {
+  Level_1.findOne({eng: req.query.word }, function (err, docs) { 
     if (err){ 
         console.log(err) 
     } 
@@ -81,8 +85,8 @@ router.post('/beginner/find/v0', (req,res) => {
     } 
 }); 
   });
-router.post('/intermediate/find/v0', (req,res) => {
-  Level_2.findOne({eng: req.body.word }, function (err, docs) { 
+router.get('/intermediate/find/v0', (req,res) => {
+  Level_2.findOne({eng: req.query.word }, function (err, docs) { 
     if (err){ 
         console.log(err) 
     } 
@@ -92,8 +96,8 @@ router.post('/intermediate/find/v0', (req,res) => {
 }); 
   });
 
-  router.post('/upper-intermediate/find/v0', (req,res) => {
-    Level_3.findOne({eng: req.body.word }, function (err, docs) { 
+  router.get('/upper-intermediate/find/v0', (req,res) => {
+    Level_3.findOne({eng: req.query.word }, function (err, docs) { 
       if (err){ 
           console.log(err) 
       } 
