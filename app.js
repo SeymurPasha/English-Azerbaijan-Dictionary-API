@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 app.use(cors({origin: true}));
-
+app.use(express.static('public'))
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
