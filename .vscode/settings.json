@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/18973113-4115-4dd0-92d3-5011470c4444/resourceGroups/engazdictionary/providers/Microsoft.Web/sites/engazdictionary",
+    "appService.deploySubpath": "."
+}
