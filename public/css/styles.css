@@ -1657,6 +1657,15 @@ a:hover.back-to-top {
 /*     20. Media Queries     */
 /*****************************/	
 /* Min-width width 768px */
+@media (max-width: 480px) {
+	.routes label {
+		overflow: scroll;
+		}
+	
+		.examples span {
+			overflow: scroll;
+		}
+}
 
 @media (max-width:768px) {
 	.routes label {
