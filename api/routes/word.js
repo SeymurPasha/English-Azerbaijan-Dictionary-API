@@ -55,29 +55,6 @@ router.get('/upper-intermediate/v0', paginatedResults(Level_3),(req,res,next) =>
   res.json(res.paginatedResults)
 })
 
-
-router.get('beginner/delete', (req,res) => {
-  Level_1.deleteOne({eng:req.query.word}).then(function(){ 
-    console.log("Data deleted");
-}).catch(function(error){ 
-    console.log(error); 
-}); 
-})
-router.get('intermediate/delete', (req,res) => {
-  Level_2.deleteOne({eng:req.query.word}).then(function(){ 
-    console.log("Data deleted");
-}).catch(function(error){ 
-    console.log(error); 
-}); 
-})
-router.get('upper-intermediate/delete', (req,res) => {
-  Level_3.deleteOne({eng:req.body.word}).then(function(){ 
-    console.log("Data deleted");
-}).catch(function(error){ 
-    console.log(error); 
-}); 
-})
-
 router.get('/beginner/find/v0', (req,res) => {
   Level_1.findOne({eng: req.query.word }, function (err, docs) { 
     if (err){ 
