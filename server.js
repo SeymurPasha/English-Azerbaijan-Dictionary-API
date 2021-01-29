@@ -6,5 +6,5 @@ if (port == null || port == "") {
   }
 const server = http.createServer(app);
 
-
+console.log(port);
 server.listen(port);
